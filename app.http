@@ -1,0 +1,24 @@
+POST http://localhost:3004/register HTTP/1.1
+content-type: application/json
+
+{
+
+   "name":"samantha",
+   "email":"samantha@gmail.com",
+   "password":"samantha123"
+
+}
+
+###
+POST http://localhost:3004/login HTTP/1.1
+content-type: application/json
+
+{
+
+   "name":"samantha",
+   "password":"samantha12"
+   
+}
+###
+GET http://localhost:3004/dashboard HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoic2FtYW50aGEiLCJpYXQiOjE3NTcyNTA0OTR9.6kWaqonJ8LOgFUaB6r8glXuu3sH8il1ytna8OCbs65Q
