@@ -38,11 +38,11 @@ app.post('/register', async (request, response) => {
   try {
     const { name, email, password } = request.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const selectUserQuery = `SELECT * FROM user WHERE name = ?;`;
+    const selectUserQuery = `SELECT * FROM users WHERE name = ?;`;
     const databaseUser = await database.get(selectUserQuery, [name]);
     if (databaseUser === undefined) {
       if (validatePassword(password)) {
-        const createUserQuery = `INSERT INTO user (name, email, password) VALUES (?, ?, ?);`;
+        const createUserQuery = `INSERT INTO users (name, email, password) VALUES (?, ?, ?);`;
         const dbResponse = await database.run(createUserQuery, [name, email, hashedPassword]);
         const newUserId = dbResponse.lastID;
         response.send(`Created new user with ${newUserId}`);
@@ -81,7 +81,7 @@ const authenticateToken = (request, response, next) => {
 app.post('/login', async (request, response) => {
   try {
     const { name, password } = request.body;
-    const selectUserQuery = `SELECT * FROM user WHERE name = ?;`;
+    const selectUserQuery = `SELECT * FROM users WHERE name = ?;`;
     const databaseUser = await database.get(selectUserQuery, [name]);
     if (databaseUser === undefined) {
       response.status(400).send({"error_msg":"Invalid user"});
@@ -90,26 +90,44 @@ app.post('/login', async (request, response) => {
       if (isPasswordMatched === true) {
         const payload = { name: name };
         const jwtToken = jwt.sign(payload, jwtSecretKey);
-        response.send({ jwtToken });
+        response.send({ jwtToken});
+        
       } else {
         response.status(400).send({"error_msg":"Invalid password"});
       }
     }
   } catch (error) {
-    console.log(`Error: ${error.message}`);
+    console.log(`Error:`);
     response.status(500).send({"error_msg":"Internal Server Error"});
   }
 });
 
 app.get('/dashboard', authenticateToken, async (request, response) => {
   try {
-    let { username } = request;
-    console.log(username);
-    const getUsersQuery = `SELECT * FROM user;`;
-    const usersArray = await database.all(getUsersQuery);
-    response.send({username});
-  } catch (error) {
-    console.log(`Error: ${error.message}`);
+    const getUsersQuery = `SELECT * FROM users`;
+      response.send(`success`)
+   } catch (error) {
+    console.log(`Error:`);
     response.status(500)
   }
+})
+
+
+app.post('/transactions',authenticateToken, async (request, response) => {
+  
+  const { title,amount, category,date,type} = request.body
+
+  try {
+    const result = await database.run('INSERT INTO transactions (title, amount, category, date,type) VALUES ( ?,?,?,?,?)', [title, amount, category, date,type]);
+    console.log(result)
+    response.json({ id:result.lastID, title, amount, category, date,type });
+  
+      console.log(result)
+       response.send(result)
+     }catch (error){
+      console.log(`Error : ${error}`)
+      response.status(500).send('Database error')
+     }
+  
+  
 })

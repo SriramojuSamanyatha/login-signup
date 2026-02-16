@@ -3,9 +3,9 @@ content-type: application/json
 
 {
 
-   "name":"samantha",
-   "email":"samantha@gmail.com",
-   "password":"samantha123"
+   "name":"ravi123",
+   "email":"samntharavi@gmail.com",
+   "password":"ravi124"
 
 }
 
@@ -15,10 +15,25 @@ content-type: application/json
 
 {
 
-   "name":"samantha",
-   "password":"samantha12"
+   "name":"ravi",
+   "password":"ravi123"
    
 }
 ###
 GET http://localhost:3004/dashboard HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoic2FtYW50aGEiLCJpYXQiOjE3NTcyNTA0OTR9.6kWaqonJ8LOgFUaB6r8glXuu3sH8il1ytna8OCbs65Q
+
+
+###
+POST http://localhost:3004/transactions HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicmF2aSIsImlhdCI6MTc3MTE1ODIxNH0.Wbl5G1a6y7LTNJYlGwWcM2oW2r02nU21gPF9sTBWfJY
+
+{
+
+   "title":"ravi",
+   "amount":1000,
+   "category" :"other",
+   "date":"5-6-2026",
+   "type":"income"
+
+}
