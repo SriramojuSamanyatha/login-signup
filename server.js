@@ -6,6 +6,7 @@ const sqlite3 = require('sqlite3');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { request } = require('http');
 
 const databasePath = path.join(__dirname, 'database.db');
 const app = express();
@@ -130,4 +131,33 @@ app.post('/transactions',authenticateToken, async (request, response) => {
      }
   
   
+})
+
+app.get('/transactions',authenticateToken, async (request, response) => {
+  try {
+    const getUsersQuery = `SELECT * FROM transactions`;
+      const usersGetArray = await database.all(getUsersQuery);
+  response.send(usersGetArray) 
+
+   } catch (error) {
+    console.log(`Error:`);
+    response.status(500)
+  }
+})
+
+
+app.delete('/transactions/:id/',authenticateToken,async (request,response) => {
+  try{
+    const {id} = request.params 
+  const deleteQuery = `
+    DELETE FROM
+      transactions
+    WHERE
+      id = ? RETURNING *`;
+  const userData = await database.get(deleteQuery,[id]);
+  response.status(200).json({userData});
+
+  }catch (error){
+    return response.status(500).json({success:false,message:"can't delete amout details"})
+  }
 })
